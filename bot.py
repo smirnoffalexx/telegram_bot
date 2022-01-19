@@ -7,8 +7,8 @@ bot = telebot.TeleBot(config.token)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-	bot.reply_to(message, "Привет, Суетолог! Я - Бета-версия Бота Макара.\n Для того, чтобы узнать работает ли сегодня Макар - напиши /today.\n\
-		Чтобы узнать работает ли Макар в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
+	bot.reply_to(message, "Привет, Суетолог! Я - Бота Макара и МарвелМатвея.\n Для того, чтобы узнать работает ли сегодня Макар и Матвей - напиши /today.\n\
+		Чтобы узнать работает ли Макар и Матвей в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
 		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!")
 
 @bot.message_handler(commands=['today'])
@@ -18,36 +18,36 @@ def today_is_workday(message):
 	delta = (day - base_date).days
 	
 	if delta % 4 == 0:
-		bot.reply_to(message, "Вагнер сегодня работает! Он на работе с 9 утра.")
+		bot.reply_to(message, "Суетологи сегодня работают! Макар на работе с 9 утра. Матвей на работе с 8 утра до 20.")
 	elif delta % 4 == 1:
-		bot.reply_to(message, "Вагнер сегодня работает! Он на работе с 9 вечера, поэтому можно почилить до 7 вечера.")
+		bot.reply_to(message, "Суетологи сегодня работают! Макар на работе с 9 вечера, поэтому можно с ним почилить до 7 вечера. Матвей на работе с 8 утра до 20.")
 	elif delta % 4 == 2:
-		bot.reply_to(message, "Вагнер сегодня Не работает, идем в кофейню! Он приходит с работы в 10.30 утра.")
+		bot.reply_to(message, "Суетологи сегодня Не работают, идем в кофейню! Макар приходит с работы в 10.30 утра. Матвей чилит.")
 	else:
-		bot.reply_to(message, "Вагнер сегодня Не работает, идем в кофейню! У него сегодня полный выходной.")
+		bot.reply_to(message, "Суетологи сегодня Не работают, идем в кофейню! У суетологов сегодня полный выходной.")
 
 @bot.message_handler(commands=['anydate'])
 def any_date_is_workday(message):
-	bot.send_message(message.chat.id, "Введи дату в формате yyyy-mm-dd, чтобы узнать работает ли Макар в этот день")
+	bot.send_message(message.chat.id, "Введи дату в формате yyyy-mm-dd, чтобы узнать работает ли Макар и Матвей в этот день")
 	bot.register_next_step_handler(message, count_date)
 
 def count_date(message):
 	try:
 		any_day = datetime.datetime.strptime(message.text, '%Y-%m-%d')
-		base_date = datetime.datetime(2021, 12, 8, 0, 0) # Makar was on job since 9 a.m.
+		base_date = datetime.datetime(2021, 12, 8, 0, 0) # Makar was on job since 9 a.m. and Matvey has the same timetable
 		delta = (any_day - base_date).days
 		today = datetime.datetime.today()
 		delta_today = (any_day - today).days
 
 		if delta_today >= 0:
 			if delta % 4 == 0:
-				bot.reply_to(message, "Вагнер работает! Он на работе с 9 утра.")
+				bot.reply_to(message, "Суетологи работают! Макар на работе с 9 утра. Матвей на работе с 8 утра до 20.")
 			elif delta % 4 == 1:
-				bot.reply_to(message, "Вагнер работает! Он на работе с 9 вечера, поэтому можно почилить до 7 вечера.")
+				bot.reply_to(message, "Суетологи работают! Макар на работе с 9 вечера, поэтому можно почилить до 7 вечера. Матвей на работе с 8 утра до 20.")
 			elif delta % 4 == 2:
-				bot.reply_to(message, "Вагнер Не работает, можно идти в кофейню! Он приходит с работы в 10.30 утра.")
+				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! Макар приходит с работы в 10.30 утра. Матвей чилит.")
 			else:
-				bot.reply_to(message, "Вагнер Не работает, можно идти в кофейню! У него полный выходной.")
+				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
 		else:
 			bot.reply_to(message, "Ты запросил день из прошлого. Повтори попытку, начиная с команды /anydate")
 	except ValueError:
