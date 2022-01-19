@@ -69,3 +69,20 @@ def julian_day(message):
 	bot.reply_to(message, "Сегодня %s день по Юлианскому календарю"%jd)
 	
 bot.infinity_polling()
+
+# If I want to check date format without handling an exception:
+# import re
+
+# strings = ["8:30:00", "16:00:00", "845:00", "aa:bb:00"]
+
+# for s in strings:
+#     if re.match("\d{1,2}:\d{2}:\d{2}", s):  # Will return True if pattern matches s
+#         print("match: {}".format(s))  # Take action on a matching pattern
+#     else:
+#         print("no match: {}".format(s))
+
+# doy = datetime.datetime.strptime('2014-01-01', '%Y-%m-%d').timetuple().tm_yday
+
+#@bot.message_handler(func=lambda m: True)
+#def echo_all(message):
+#	bot.reply_to(message, message.text)
