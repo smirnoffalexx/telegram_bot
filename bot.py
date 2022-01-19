@@ -81,7 +81,7 @@ bot.infinity_polling()
 #     else:
 #         print("no match: {}".format(s))
 
-# doy = datetime.datetime.strptime('2014-01-01', '%Y-%m-%d').timetuple().tm_yday
+# day = datetime.datetime.strptime('2014-01-01', '%Y-%m-%d').timetuple().tm_yday
 
 #@bot.message_handler(func=lambda m: True)
 #def echo_all(message):
