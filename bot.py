@@ -5,11 +5,13 @@ import config
 
 bot = telebot.TeleBot(config.token)
 
+switcher = False
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
 	bot.reply_to(message, "Привет, Суетолог! Я - Бот Макара и МарвелМатвея.\n Для того, чтобы узнать работает ли сегодня Макар и Матвей - напиши /today.\n\
 		Чтобы узнать работает ли Макар и Матвей в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
-		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!")
+		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switch-on, чтобы отключить - /switch-off.")
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
@@ -67,8 +69,54 @@ def julian_day(message):
 	date_full = datetime.datetime(year, month, day, hour, minute, second, ms)
 	jd = int(julian.to_jd(date_full))
 	bot.reply_to(message, "Сегодня %s день по Юлианскому календарю"%jd)
+
+@bot.message_handler(commands=['switch-on'])
+def speaking_regime_on(message):
+	global switcher
+	switcher = True
 	
+@bot.message_handler(commands=['switch-off'])
+def speaking_regime_off(message):
+	global switcher
+	switcher = False
+
+@bot.message_handler(func=lambda m: True)
+def catch_phrase(message):
+	global switcher
+	
+	words = {
+			"Суета": "Никакой суеты!!!",
+			"суета": "Никакой суеты!!!",
+			"Картатека": "Сережа???",
+			"картатека": "Сережа???",
+			"Кофе": "Я с вами за кофе!",
+			"Хашбраун": "Без Сережи не пойду за хашбрауном!",
+			"хашбраун": "Без Сережи не пойду за хашбрауном!",
+			"Дима", "Опять тачки в инсте?",
+			"дима", "Опять тачки в инсте?",
+			"Ну", "Баранки гну...",
+			"ну", "Баранки гну...",
+			"Я", "Последняя буква алфавита",
+			"я", "Последняя буква алфавита"
+		}
+	
+	if switcher:
+		for key in words.keys():
+			if message.text.find(words) == -1
+				pass
+			else:
+				bot.reply_to(message, words[key])
+
 bot.infinity_polling()
+
+# @bot.message_handler(commands=['speaking'])
+# def speaking(message):
+# 	global switcher
+# 	
+# 	if switcher:
+# 		bot.register_next_step_handler(message, catch_phrase)
+# 	else:
+# 		bot.reply_to(message, "Чтобы бот начал беседовать, необходимо включить режим высеров при помощи команды /switch-on")
 
 # If I want to check date format without handling an exception:
 # import re
