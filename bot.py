@@ -5,13 +5,20 @@ import config
 
 bot = telebot.TeleBot(config.token)
 
-switcher = False
+switchers = {}
 
+def store_switcher(my_key, my_value):
+  switchers[my_key] = dict(value=my_value)
+  
+def get_switcher(my_key):
+  return switchers[my_key].get('value')
+	
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
 	bot.reply_to(message, "Привет, Суетолог! Я - Бот Макара и МарвелМатвея.\n Для того, чтобы узнать работает ли сегодня Макар и Матвей - напиши /today.\n\
 		Чтобы узнать работает ли Макар и Матвей в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
 		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switchon, чтобы отключить - /switchoff.")
+	switcher_storage
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
@@ -72,19 +79,17 @@ def julian_day(message):
 
 @bot.message_handler(commands=['switchon'])
 def speaking_regime_on(message):
-	global switcher
-	switcher = True
+	store_switcher(message.chat.id, True)
 	bot.reply_to(message, "Режим болтовни включен!")
 	
 @bot.message_handler(commands=['switchoff'])
 def speaking_regime_off(message):
-	global switcher
-	switcher = False
+	store_switcher(message.chat.id, False)
 	bot.reply_to(message, "Режим болтовни выключен!")
 
 @bot.message_handler(func=lambda m: True)
 def catch_phrase(message):
-	global switcher
+	switcher = get_switcher(message.chat.id)
 	
 	words = {
 			"Суета": "Никакой суеты!!!",
