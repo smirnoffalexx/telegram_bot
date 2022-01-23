@@ -74,11 +74,13 @@ def julian_day(message):
 def speaking_regime_on(message):
 	global switcher
 	switcher = True
+	bot.reply_to(message, "Режим болтовни включен!")
 	
 @bot.message_handler(commands=['switchoff'])
 def speaking_regime_off(message):
 	global switcher
 	switcher = False
+	bot.reply_to(message, "Режим болтовни выключен!")
 
 @bot.message_handler(func=lambda m: True)
 def catch_phrase(message):
