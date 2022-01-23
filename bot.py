@@ -102,7 +102,7 @@ def catch_phrase(message):
 	
 	if switcher:
 		for key in words.keys():
-			if message.text.find(words) == -1:
+			if message.text.find(key) == -1:
 				pass
 			else:
 				bot.reply_to(message, words[key])
