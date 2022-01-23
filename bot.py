@@ -11,7 +11,7 @@ switcher = False
 def send_welcome(message):
 	bot.reply_to(message, "Привет, Суетолог! Я - Бот Макара и МарвелМатвея.\n Для того, чтобы узнать работает ли сегодня Макар и Матвей - напиши /today.\n\
 		Чтобы узнать работает ли Макар и Матвей в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
-		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switch-on, чтобы отключить - /switch-off.")
+		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switchon, чтобы отключить - /switchoff.")
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
@@ -70,12 +70,12 @@ def julian_day(message):
 	jd = int(julian.to_jd(date_full))
 	bot.reply_to(message, "Сегодня %s день по Юлианскому календарю"%jd)
 
-@bot.message_handler(commands=['switch-on'])
+@bot.message_handler(commands=['switchon'])
 def speaking_regime_on(message):
 	global switcher
 	switcher = True
 	
-@bot.message_handler(commands=['switch-off'])
+@bot.message_handler(commands=['switchoff'])
 def speaking_regime_off(message):
 	global switcher
 	switcher = False
