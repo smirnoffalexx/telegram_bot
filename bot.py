@@ -1,6 +1,7 @@
 import telebot
 import datetime
 import julian
+# from re import search
 import config
 
 bot = telebot.TeleBot(config.token)
@@ -18,7 +19,7 @@ def send_welcome(message):
 	bot.reply_to(message, "Привет, Суетолог! Я - Бот Макара и МарвелМатвея.\n Для того, чтобы узнать работает ли сегодня Макар и Матвей - напиши /today.\n\
 		Чтобы узнать работает ли Макар и Матвей в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
 		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switchon, чтобы отключить - /switchoff.")
-	switcher_storage
+	store_switcher(message.chat.id, False)
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
@@ -110,10 +111,10 @@ def catch_phrase(message):
 	
 	if switcher:
 		for key in words.keys():
-			if message.text.find(key) >= 0:
+			if message.text.find(key) >= 0: # search(key, message.text): 
 				bot.reply_to(message, words[key])
-			else:
-				bot.reply_to(message, "Тут нет ключевых слов")
+			# else:
+			#	bot.reply_to(message, "Тут нет ключевых слов")
 
 bot.infinity_polling()
 
