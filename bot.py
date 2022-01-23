@@ -111,7 +111,7 @@ def catch_phrase(message):
 	if switcher:
 		for key in words.keys():
 			if message.text.find(key) == -1:
-				pass
+				bot.reply_to(message, "Тут нет ключевых слов")
 			else:
 				bot.reply_to(message, words[key])
 
