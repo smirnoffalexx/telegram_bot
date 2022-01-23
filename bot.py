@@ -108,8 +108,7 @@ def catch_phrase(message):
 			if message.text.find(key) == -1:
 				pass
 			else:
-				bot.send_message(message.chat.id, words[key])
-				# bot.reply_to(message, words[key])
+				bot.reply_to(message, words[key])
 
 bot.infinity_polling()
 
