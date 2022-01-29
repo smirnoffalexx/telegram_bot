@@ -39,21 +39,21 @@ def anydate_parser(message):
 		bot.reply_to(message, "Неверный формат. Нужна дата в формате yyyy-mm-dd. Повтори попытку, начиная с команды /anydate")
 
 def count_date(message, any_date):
-		base_date = datetime.date(2021, 12, 8) # Makar was on job since 9 a.m. and Matvey has the same timetable
-		delta = (any_date - base_date).days
-		today = datetime.date.today()
+	base_date = datetime.date(2021, 12, 8) # Makar was on job since 9 a.m. and Matvey has the same timetable
+	delta = (any_date - base_date).days
+	today = datetime.date.today()
 
-		if (any_date - today).days >= 0:
-			if delta % 4 == 0:
-				bot.reply_to(message, "Суетологи работают! Макар на работе с 9 утра до 9 утра следующего дня. Матвей на работе с 8 утра до 20.")
-			elif delta % 4 == 1:
-				bot.reply_to(message, "Суетологи работают! Макар на работе до 9 утра, поэтому можно почилить после 10 утра. Матвей на работе с 8 утра до 20.")
-			elif delta % 4 == 2:
-				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
-			else:
-				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
+	if (any_date - today).days >= 0:
+		if delta % 4 == 0:
+			bot.reply_to(message, "Суетологи работают! Макар на работе с 9 утра до 9 утра следующего дня. Матвей на работе с 8 утра до 20.")
+		elif delta % 4 == 1:
+			bot.reply_to(message, "Суетологи работают! Макар на работе до 9 утра, поэтому можно почилить после 10 утра. Матвей на работе с 8 утра до 20.")
+		elif delta % 4 == 2:
+			bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
 		else:
-			bot.reply_to(message, "Ты запросил день из прошлого. Повтори попытку, начиная с команды /anydate")
+			bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
+	else:
+		bot.reply_to(message, "Ты запросил день из прошлого. Повтори попытку, начиная с команды /anydate")
 
 @bot.message_handler(commands=['julian'])
 def julian_day(message):
