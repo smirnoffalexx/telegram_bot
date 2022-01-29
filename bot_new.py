@@ -82,34 +82,37 @@ def speaking_regime_off(message):
 
 @bot.message_handler(func=lambda m: True)
 def catch_phrase(message):
-	switcher = get_switcher(message.chat.id)
-	
-	words = {
-			"Привет": "Дороу",
-			"привет": "Дороу",
-			"Суета": "Никакой суеты!!!",
-			"суета": "Никакой суеты!!!",
-			"Отмена": "Отмена суеты!!!",
-			"отмена": "Отмена суеты!!!",
-			"Картатека": "Сережа???",
-			"картатека": "Сережа???",
-			"Алло": "Пицца???",
-			"алло": "Пицца???",
-			"Кофе": "Я с вами за кофе!",
-			"кофе": "Я с вами за кофе!",
-			"Хашбраун": "Без Сережи не пойду за хашбрауном!",
-			"хашбраун": "Без Сережи не пойду за хашбрауном!",
-			"Дима": "Опять тачки в инсте?",
-			"дима": "Опять тачки в инсте?",
-			"https://vm.tiktok.com": "Опять тиктоки..."
-		}
-	
-	if switcher:
-		for key in words.keys():
-			if message.text.find(key) >= 0: # search(key, message.text): 
-				bot.reply_to(message, words[key])
-			# else:
-			#	bot.reply_to(message, "Тут нет ключевых слов")
+	try:
+		switcher = get_switcher(message.chat.id)
+		
+		words = {
+				"Привет": "Дороу",
+				"привет": "Дороу",
+				"Суета": "Никакой суеты!!!",
+				"суета": "Никакой суеты!!!",
+				"Отмена": "Отмена суеты!!!",
+				"отмена": "Отмена суеты!!!",
+				"Картатека": "Сережа???",
+				"картатека": "Сережа???",
+				"Алло": "Пицца???",
+				"алло": "Пицца???",
+				"Кофе": "Я с вами за кофе!",
+				"кофе": "Я с вами за кофе!",
+				"Хашбраун": "Без Сережи не пойду за хашбрауном!",
+				"хашбраун": "Без Сережи не пойду за хашбрауном!",
+				"Дима": "Опять тачки в инсте?",
+				"дима": "Опять тачки в инсте?",
+				"https://vm.tiktok.com": "Опять тиктоки..."
+			}
+		
+		if switcher:
+			for key in words.keys():
+				if message.text.find(key) >= 0: # search(key, message.text): 
+					bot.reply_to(message, words[key])
+				# else:
+				#	bot.reply_to(message, "Тут нет ключевых слов")
+	except KeyError:
+		store_switcher(message.chat.id, False)
 
 bot.infinity_polling()
 
