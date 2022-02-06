@@ -9,10 +9,10 @@ bot = telebot.TeleBot(config.token)
 switchers = {}
 
 def store_switcher(my_key, my_value):
-  switchers[my_key] = dict(value=my_value)
+	switchers[my_key] = dict(value=my_value)
   
 def get_switcher(my_key):
-  return switchers[my_key].get('value')
+ 	return switchers[my_key].get('value')
 	
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -23,67 +23,37 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
-	base_date = datetime.date(2021, 12, 8) # Makar was on job since 9 a.m.
-	day = datetime.date.today()
-	delta = (day - base_date).days
-	
-	if delta % 4 == 0:
-		bot.reply_to(message, "Суетологи сегодня работают! Макар на работе с 9 утра. Матвей на работе с 8 утра до 20.")
-	elif delta % 4 == 1:
-		bot.reply_to(message, "Суетологи сегодня работают! Макар на работе с 9 вечера, поэтому можно с ним почилить до 7 вечера. Матвей на работе с 8 утра до 20.")
-	elif delta % 4 == 2:
-		bot.reply_to(message, "Суетологи сегодня Не работают, идем в кофейню! Макар приходит с работы в 10.30 утра. Матвей чилит.")
-	else:
-		bot.reply_to(message, "Суетологи сегодня Не работают, идем в кофейню! У суетологов сегодня полный выходной.")
+	date = datetime.date.today()
+	count_date(message, date)
 
 @bot.message_handler(commands=['anydate'])
 def any_date_is_workday(message):
 	bot.send_message(message.chat.id, "Введи дату в формате yyyy-mm-dd, чтобы узнать работает ли Макар и Матвей в этот день")
-	bot.register_next_step_handler(message, count_date)
+	bot.register_next_step_handler(message, anydate_parser)
 
-def count_date(message):
+def anydate_parser(message):
 	try:
-		any_day = datetime.datetime.strptime(message.text, '%Y-%m-%d')
-		base_date = datetime.datetime(2021, 12, 8, 0, 0) # Makar was on job since 9 a.m. and Matvey has the same timetable
-		delta = (any_day - base_date).days
-		today = datetime.datetime.today()
-		delta_today = (any_day - today).days
-
-		if delta_today >= 0:
-			if delta % 4 == 0:
-				bot.reply_to(message, "Суетологи работают! Макар на работе с 9 утра. Матвей на работе с 8 утра до 20.")
-			elif delta % 4 == 1:
-				bot.reply_to(message, "Суетологи работают! Макар на работе с 9 вечера, поэтому можно почилить до 7 вечера. Матвей на работе с 8 утра до 20.")
-			elif delta % 4 == 2:
-				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! Макар приходит с работы в 10.30 утра. Матвей чилит.")
-			else:
-				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
-		else:
-			bot.reply_to(message, "Ты запросил день из прошлого. Повтори попытку, начиная с команды /anydate")
+		any_date = datetime.datetime.strptime(message.text, '%Y-%m-%d').date()
+		count_date(message, any_date)
 	except ValueError:
 		bot.reply_to(message, "Неверный формат. Нужна дата в формате yyyy-mm-dd. Повтори попытку, начиная с команды /anydate")
 
-def count_date_new(message):
-	try:
-		any_day = datetime.datetime.strptime(message.text, '%Y-%m-%d')
-		base_date = datetime.datetime(2021, 12, 8, 0, 0) # Makar was on job since 9 a.m. and Matvey has the same timetable
-		delta = (any_day - base_date).days
-		today = datetime.datetime.today()
-		delta_today = (any_day - today).days
+def count_date(message, any_date):
+	base_date = datetime.date(2021, 12, 8) # Makar was on job since 9 a.m. and Matvey has the same timetable
+	delta = (any_date - base_date).days
+	today = datetime.date.today()
 
-		if delta_today >= 0:
-			if delta % 4 == 0:
-				bot.reply_to(message, "Суетологи работают! Макар на работе с 9 утра. Матвей на работе с 8 утра до 20.")
-			elif delta % 4 == 1:
-				bot.reply_to(message, "Суетологи работают! Макар на работе до 9 утра, поэтому можно почилить после 10 утра. Матвей на работе с 8 утра до 20.")
-			elif delta % 4 == 2:
-				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
-			else:
-				bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
+	if (any_date - today).days >= 0:
+		if delta % 4 == 0:
+			bot.reply_to(message, "Суетологи работают! Макар на работе с 9 утра до 9 утра следующего дня. Матвей на работе с 8 утра до 20.")
+		elif delta % 4 == 1:
+			bot.reply_to(message, "Суетологи работают! Макар на работе до 9 утра, поэтому можно почилить после 10 утра. Матвей на работе с 8 утра до 20.")
+		elif delta % 4 == 2:
+			bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
 		else:
-			bot.reply_to(message, "Ты запросил день из прошлого. Повтори попытку, начиная с команды /anydate")
-	except ValueError:
-		bot.reply_to(message, "Неверный формат. Нужна дата в формате yyyy-mm-dd. Повтори попытку, начиная с команды /anydate")
+			bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
+	else:
+		bot.reply_to(message, "Ты запросил день из прошлого. Повтори попытку, начиная с команды /anydate")
 
 @bot.message_handler(commands=['julian'])
 def julian_day(message):
@@ -112,34 +82,37 @@ def speaking_regime_off(message):
 
 @bot.message_handler(func=lambda m: True)
 def catch_phrase(message):
-	switcher = get_switcher(message.chat.id)
-	
-	words = {
-			"Привет": "Дороу",
-			"привет": "Дороу",
-			"Суета": "Никакой суеты!!!",
-			"суета": "Никакой суеты!!!",
-			"Отмена": "Отмена суеты!!!",
-			"отмена": "Отмена суеты!!!",
-			"Картатека": "Сережа???",
-			"картатека": "Сережа???",
-			"Алло": "Пицца???",
-			"алло": "Пицца???",
-			"Кофе": "Я с вами за кофе!",
-			"кофе": "Я с вами за кофе!",
-			"Хашбраун": "Без Сережи не пойду за хашбрауном!",
-			"хашбраун": "Без Сережи не пойду за хашбрауном!",
-			"Дима": "Опять тачки в инсте?",
-			"дима": "Опять тачки в инсте?",
-			"https://vm.tiktok.com": "Опять тиктоки..."
-		}
-	
-	if switcher:
-		for key in words.keys():
-			if message.text.find(key) >= 0: # search(key, message.text): 
-				bot.reply_to(message, words[key])
-			# else:
-			#	bot.reply_to(message, "Тут нет ключевых слов")
+	try:
+		switcher = get_switcher(message.chat.id)
+		
+		words = {
+				"Привет": "Дороу",
+				"привет": "Дороу",
+				"Суета": "Никакой суеты!!!",
+				"суета": "Никакой суеты!!!",
+				"Отмена": "Отмена суеты!!!",
+				"отмена": "Отмена суеты!!!",
+				"Картатека": "Сережа???",
+				"картатека": "Сережа???",
+				"Алло": "Пицца???",
+				"алло": "Пицца???",
+				"Кофе": "Я с вами за кофе!",
+				"кофе": "Я с вами за кофе!",
+				"Хашбраун": "Без Сережи не пойду за хашбрауном!",
+				"хашбраун": "Без Сережи не пойду за хашбрауном!",
+				"Дима": "Опять тачки в инсте?",
+				"дима": "Опять тачки в инсте?",
+				"https://vm.tiktok.com": "Опять тиктоки..."
+			}
+		
+		if switcher:
+			for key in words.keys():
+				if message.text.find(key) >= 0: # search(key, message.text): 
+					bot.reply_to(message, words[key])
+				# else:
+				#	bot.reply_to(message, "Тут нет ключевых слов")
+	except KeyError:
+		store_switcher(message.chat.id, False)
 
 bot.infinity_polling()
 
