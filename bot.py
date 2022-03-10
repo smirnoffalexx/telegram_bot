@@ -23,7 +23,7 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
-	date = datetime.date.today()
+	date = datetime.datetime.now().date()
 	count_date(message, date)
 
 @bot.message_handler(commands=['anydate'])
@@ -96,6 +96,10 @@ def catch_phrase(message):
 				"картатека": "Сережа???",
 				"Алло": "Пицца???",
 				"алло": "Пицца???",
+				"Пицц": "Погнали в алло",
+				"пицц": "Погнали в алло",
+				"Пиво": "Я с вами",
+				"пиво": "Я с вами",
 				"Кофе": "Я с вами за кофе!",
 				"кофе": "Я с вами за кофе!",
 				"Хашбраун": "Без Сережи не пойду за хашбрауном!",
@@ -112,7 +116,7 @@ def catch_phrase(message):
 				# else:
 				#	bot.reply_to(message, "Тут нет ключевых слов")
 	except KeyError:
-		store_switcher(message.chat.id, False)
+		store_switcher(message.chat.id, True)
 
 bot.infinity_polling()
 
