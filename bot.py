@@ -16,19 +16,19 @@ def get_switcher(my_key):
 	
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-	bot.reply_to(message, "Привет, Суетолог! Я - Бот Макара и МарвелМатвея.\n Для того, чтобы узнать работает ли сегодня Макар и Матвей - напиши /today.\n\
-		Чтобы узнать работает ли Макар и Матвей в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
+	bot.reply_to(message, "Привет, Суетолог! Я - Бот Макара.\n Для того, чтобы узнать работает ли сегодня Макар - напиши /today.\n\
+		Чтобы узнать работает ли Макар в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
 		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switchon, чтобы отключить - /switchoff.")
 	store_switcher(message.chat.id, False)
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
-	date = datetime.date.today()
+	date = datetime.datetime.now().date()
 	count_date(message, date)
 
 @bot.message_handler(commands=['anydate'])
 def any_date_is_workday(message):
-	bot.send_message(message.chat.id, "Введи дату в формате yyyy-mm-dd, чтобы узнать работает ли Макар и Матвей в этот день")
+	bot.send_message(message.chat.id, "Введи дату в формате yyyy-mm-dd, чтобы узнать работает ли Макар в этот день")
 	bot.register_next_step_handler(message, anydate_parser)
 
 def anydate_parser(message):
@@ -39,19 +39,19 @@ def anydate_parser(message):
 		bot.reply_to(message, "Неверный формат. Нужна дата в формате yyyy-mm-dd. Повтори попытку, начиная с команды /anydate")
 
 def count_date(message, any_date):
-	base_date = datetime.date(2021, 12, 8) # Makar was on job since 9 a.m. and Matvey has the same timetable
+	base_date = datetime.date(2021, 12, 8) # Makar was on job since 9 a.m.
 	delta = (any_date - base_date).days
 	today = datetime.date.today()
 
 	if (any_date - today).days >= 0:
 		if delta % 4 == 0:
-			bot.reply_to(message, "Суетологи работают! Макар на работе с 9 утра до 9 утра следующего дня. Матвей на работе с 8 утра до 20.")
+			bot.reply_to(message, "Макар работает! Он на работе с 9 утра до 9 утра следующего дня.")
 		elif delta % 4 == 1:
-			bot.reply_to(message, "Суетологи работают! Макар на работе до 9 утра, поэтому можно почилить после 10 утра. Матвей на работе с 8 утра до 20.")
+			bot.reply_to(message, "Макар работает! Он на работе до 9 утра, поэтому можно почилить после 10 утра.")
 		elif delta % 4 == 2:
-			bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
+			bot.reply_to(message, "Макар Не работает, можно идти в кофейню! У него полный выходной.")
 		else:
-			bot.reply_to(message, "Суетологи Не работают, можно идти в кофейню! У суетологов полный выходной.")
+			bot.reply_to(message, "Макар Не работает, можно идти в кофейню! У него полный выходной.")
 	else:
 		bot.reply_to(message, "Ты запросил день из прошлого. Повтори попытку, начиная с команды /anydate")
 
@@ -96,6 +96,10 @@ def catch_phrase(message):
 				"картатека": "Сережа???",
 				"Алло": "Пицца???",
 				"алло": "Пицца???",
+				"Пицц": "Погнали в алло",
+				"пицц": "Погнали в алло",
+				"Пиво": "Я с вами",
+				"пиво": "Я с вами",
 				"Кофе": "Я с вами за кофе!",
 				"кофе": "Я с вами за кофе!",
 				"Хашбраун": "Без Сережи не пойду за хашбрауном!",
@@ -112,7 +116,7 @@ def catch_phrase(message):
 				# else:
 				#	bot.reply_to(message, "Тут нет ключевых слов")
 	except KeyError:
-		store_switcher(message.chat.id, False)
+		store_switcher(message.chat.id, True)
 
 bot.infinity_polling()
 
