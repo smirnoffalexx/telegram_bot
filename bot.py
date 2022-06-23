@@ -103,7 +103,7 @@ def anydate_parser(message):
 
 def count_date(message, any_date):
 	# base_date = datetime.date(2021, 12, 8) # previous date
-	base_date = datetime.date(2021, 6, 24) # Makar was on job since 9 a.m.
+	base_date = datetime.date(2022, 6, 24) # Makar was on job since 9 a.m.
 	delta = (any_date - base_date).days
 	today = datetime.date.today()
 
