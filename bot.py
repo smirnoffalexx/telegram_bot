@@ -102,7 +102,8 @@ def anydate_parser(message):
 		bot.reply_to(message, "Неверный формат. Нужна дата в формате yyyy-mm-dd. Повтори попытку, начиная с команды /anydate")
 
 def count_date(message, any_date):
-	base_date = datetime.date(2021, 12, 8) # Makar was on job since 9 a.m.
+	# base_date = datetime.date(2021, 12, 8) # previous date
+	base_date = datetime.date(2021, 6, 24) # Makar was on job since 9 a.m.
 	delta = (any_date - base_date).days
 	today = datetime.date.today()
 
@@ -145,13 +146,6 @@ def speaking_regime_off(message):
 
 @bot.message_handler(func=lambda m: True)
 def catch_phrase(message):
-	# print(message.chat.id)
-	# a = "Макар"
-	# bot.send_message(group_chat_id, "{0}, Поздравляю с Днем Рождения!!!".format(a))
-	# picture = open("Gosling_for_DR.jpg","rb")
-	# bot.send_photo(message.chat.id, picture)
-	# f = open("for_dr.mp4","rb")
-	# bot.send_document(message.chat.id, f)
 	try:
 		switcher = get_switcher(message.chat.id)
 		
@@ -167,33 +161,6 @@ def catch_phrase(message):
 bot.infinity_polling()
 		
 # schedule.every().day.at("01:36").do(congratulation)
-
-# congratulation()
-
-# if (datetime.datetime.now().hour == 2) and (datetime.datetime.now().minute == 48): # hour == 9, minute == 0
-# 	congratulation()
-#	time.sleep(60)
-	# while True:
-#	time.sleep(3)
-#	print(datetime.datetime.now())
-#	time.sleep(3)
-#	date = datetime.datetime.now().date()
-#	for key in birthdays.keys():
-#		if (date.day == birthdays[key].date().day) and (date.month == birthdays[key].date().month):
-#			bot.send_message(group_chat_id, "{0}, Поздравляю с Днем Рождения!!!".format(key))
-#			picture = open("Gosling_for_DR.jpg","rb")
-#			bot.send_document(group_chat_id, picture)
-	# schedule.run_pending()
-	# time.sleep(1)
-
-# @bot.message_handler(commands=['speaking'])
-# def speaking(message):
-# 	global switcher
-# 	
-# 	if switcher:
-# 		bot.register_next_step_handler(message, catch_phrase)
-# 	else:
-# 		bot.reply_to(message, "Чтобы бот начал беседовать, необходимо включить режим высеров при помощи команды /switch-on")
 
 # If I want to check date format without handling an exception:
 # import re
