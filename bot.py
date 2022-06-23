@@ -49,11 +49,11 @@ def get_switcher(my_key):
  	return switchers[my_key].get('value')
 
 def congratulation(bot):
-	i = 0;
+	# i = 0;
 	while True:
 		try:
-			i = i + 1
-			print(i)
+			# i = i + 1
+			# print(i)
 			current_time = datetime.datetime.now()
 			if (current_time.hour == 10) and (current_time.minute == 0):
 				date = current_time.date()
