@@ -1,14 +1,17 @@
 import telebot
 import datetime
 import julian
-import config
+from dotenv import load_dotenv
+import os
 # from re import search
 import threading # import Thread
 import time
 
-switchers = {}
+load_dotenv()
+api_token = os.getenv("API_TOKEN")
+group_chat_id = os.getenv("CHAT_ID")
 
-group_chat_id = "-1001581543375" # 818106094
+switchers = {}
 
 birthdays = {
 	"Сережа": datetime.datetime(1999, 4, 9, hour=9), # "09.04",
@@ -72,7 +75,7 @@ def congratulation(bot):
 			break
 		time.sleep(60)
 
-bot = telebot.TeleBot(config.token)
+bot = telebot.TeleBot(api_token)
 
 threading.Thread(target=congratulation, args=(bot,)).start()
     
