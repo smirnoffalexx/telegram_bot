@@ -3,47 +3,19 @@ import datetime
 import julian
 from dotenv import load_dotenv
 import os
-# from re import search
-import threading # import Thread
+import threading
 import time
+import json
 
 load_dotenv()
 api_token = os.getenv("API_TOKEN")
 group_chat_id = os.getenv("CHAT_ID")
+words = json.loads(os.getenv("WORDS"))
+birthdays = json.loads(os.getenv("BIRTHDAYS"))
+birthday_picture = os.getenv("PICTURE_URL")
+birthday_gif = os.getenv("GIF_URL")
 
 switchers = {}
-
-birthdays = {
-	"Сережа": datetime.datetime(1999, 4, 9, hour=9), # "09.04",
-	"Макар": datetime.datetime(1998, 5, 14, hour=9), # "14.05", 
-	"Саша QA": datetime.datetime(1998, 6, 6, hour=9), # "06.06",
-	"Саша Blockchain": datetime.datetime(1998, 6, 17, hour=9), # "17.06", 
-	"Матвей": datetime.datetime(1998, 9, 19, hour=9) # "19.09",
-}
-
-words = {
-	"Привет": "Дороу",
-	"привет": "Дороу",
-	"Суета": "Никакой суеты!!!",
-	"суета": "Никакой суеты!!!",
-	"Отмена": "Отмена суеты!!!",
-	"отмена": "Отмена суеты!!!",
-	"Картатека": "Сережа???",
-	"картатека": "Сережа???",
-	"Алло": "Пицца???",
-	"алло": "Пицца???",
-	"Пицц": "Погнали в алло",
-	"пицц": "Погнали в алло",
-	"Пиво": "Я с вами",
-	"пиво": "Я с вами",
-	"Кофе": "Я с вами за кофе!",
-	"кофе": "Я с вами за кофе!",
-	"Хашбраун": "Без Сережи не пойду за хашбрауном!",
-	"хашбраун": "Без Сережи не пойду за хашбрауном!",
-	"Дима": "Опять тачки в инсте?",
-	"дима": "Опять тачки в инсте?",
-	"tiktok.com": "Опять тиктоки..."
-}
 
 def store_switcher(my_key, my_value):
 	switchers[my_key] = dict(value=my_value)
@@ -52,23 +24,20 @@ def get_switcher(my_key):
  	return switchers[my_key].get('value')
 
 def congratulation(bot):
-	# i = 0;
 	while True:
 		try:
-			# i = i + 1
-			# print(i)
 			current_time = datetime.datetime.now()
 			if (current_time.hour == 10) and (current_time.minute == 0):
 				date = current_time.date()
 				for key in birthdays.keys():
-					if (date.day == birthdays[key].date().day) and (date.month == birthdays[key].date().month):
+					birthday = datetime.datetime.strptime(birthdays[key], '%Y-%m-%d').date()
+					if (date.day == birthday.day) and (date.month == birthday.month):
 						bot.send_message(group_chat_id, "{0}, Поздравляю с Днем Рождения!!!".format(key))
-						picture = open("Gosling_for_DR.jpg","rb")
-						bot.send_photo(group_chat_id, picture)
-						f = open("for_dr.mp4","rb")
-						bot.send_document(group_chat_id, f)
+						bot.send_photo(group_chat_id, birthday_picture)
+						bot.send_document(group_chat_id, birthday_gif)
 						# time.sleep(60)
 		except Exception:
+			print("Exception raised")
 			pass
 		except KeyboardInterrupt:
 			print("KeyboardInterrupt raised")
@@ -82,10 +51,12 @@ threading.Thread(target=congratulation, args=(bot,)).start()
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
 	bot.reply_to(message, "Привет, Суетолог! Я - Бот Макара.\n Для того, чтобы узнать работает ли сегодня Макар - напиши /today.\n\
-		Чтобы узнать работает ли Макар в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd\
-		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switchon, чтобы отключить - /switchoff. Также бот умеет поздравлять с ДР.")
+		Чтобы узнать работает ли Макар в рандомный день - введи /anydate, а затем дату в формате yyyy-mm-dd \
+		(например, 2021-12-25).\n Чтобы узнать сегодняшний день по Юлианскому календарю - напиши /julian.\n\
+		Дерзай и наводи суету!\n Чтобы включить режим беседы у бота - введи команду /switchon, чтобы отключить - /switchoff.\n\
+		Также бот умеет поздравлять с ДР.")
 	store_switcher(message.chat.id, True)
-	print(message.chat.id) # remove
+	print(message.chat.id) # helper for detecting chat id
 
 @bot.message_handler(commands=['today'])
 def today_is_workday(message):
@@ -156,28 +127,7 @@ def catch_phrase(message):
 			for key in words.keys():
 				if message.text.find(key) >= 0: # search(key, message.text): 
 					bot.reply_to(message, words[key])
-				# else:
-				#	bot.reply_to(message, "Тут нет ключевых слов")
 	except KeyError:
 		store_switcher(message.chat.id, True)
 		
 bot.infinity_polling()
-		
-# schedule.every().day.at("01:36").do(congratulation)
-
-# If I want to check date format without handling an exception:
-# import re
-
-# strings = ["8:30:00", "16:00:00", "845:00", "aa:bb:00"]
-
-# for s in strings:
-#     if re.match("\d{1,2}:\d{2}:\d{2}", s):  # Will return True if pattern matches s
-#         print("match: {}".format(s))  # Take action on a matching pattern
-#     else:
-#         print("no match: {}".format(s))
-
-# day = datetime.datetime.strptime('2014-01-01', '%Y-%m-%d').timetuple().tm_yday
-
-#@bot.message_handler(func=lambda m: True)
-#def echo_all(message):
-#	bot.reply_to(message, message.text)
