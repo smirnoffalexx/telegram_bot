@@ -133,7 +133,7 @@ def send_poll_on_request1(message):
 def send_poll_on_request2(message):
 	bot.send_poll(
 		message.chat.id, 
-		poll_command1["question"], 
+		poll_command2["question"], 
 		options=[poll_command2["answer1"], poll_command2["answer2"], poll_command2["answer3"], poll_command2["answer4"]],
 		is_anonymous="false"
 	)
