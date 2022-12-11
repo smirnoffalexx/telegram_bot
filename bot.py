@@ -14,6 +14,8 @@ words = json.loads(os.getenv("WORDS"))
 birthdays = json.loads(os.getenv("BIRTHDAYS"))
 birthday_picture = os.getenv("PICTURE_URL")
 birthday_gif = os.getenv("GIF_URL")
+poll_command1 = json.loads(os.getenv("POLL_COMMAND1"))
+poll_command2 = json.loads(os.getenv("POLL_COMMAND2"))
 
 switchers = {}
 
@@ -117,6 +119,24 @@ def speaking_regime_on(message):
 def speaking_regime_off(message):
 	store_switcher(message.chat.id, False)
 	bot.reply_to(message, "Режим болтовни выключен!")
+
+@bot.message_handler(commands=[poll_command1["command"]])
+def send_poll_on_request1(message):
+	bot.send_poll(
+		message.chat.id, 
+		poll_command1["question"], 
+		options=[poll_command1["answer1"], poll_command1["answer2"], poll_command1["answer3"]],
+		is_anonymous="false"
+	)
+
+@bot.message_handler(commands=[poll_command2["command"]])
+def send_poll_on_request2(message):
+	bot.send_poll(
+		message.chat.id, 
+		poll_command1["question"], 
+		options=[poll_command2["answer1"], poll_command2["answer2"], poll_command2["answer3"]],
+		is_anonymous="false"
+	)
 
 @bot.message_handler(func=lambda m: True)
 def catch_phrase(message):
