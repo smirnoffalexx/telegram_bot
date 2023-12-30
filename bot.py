@@ -12,8 +12,8 @@ api_token = os.getenv("API_TOKEN")
 group_chat_id = os.getenv("CHAT_ID")
 words = json.loads(os.getenv("WORDS"))
 birthdays = json.loads(os.getenv("BIRTHDAYS"))
-birthday_picture = os.getenv("PICTURE_URL")
-birthday_gif = os.getenv("GIF_URL")
+celebration_picture = os.getenv("PICTURE_URL")
+celebration_gif = os.getenv("GIF_URL")
 poll_command1 = json.loads(os.getenv("POLL_COMMAND1"))
 poll_command2 = json.loads(os.getenv("POLL_COMMAND2"))
 
@@ -35,9 +35,15 @@ def congratulation(bot):
 					birthday = datetime.datetime.strptime(birthdays[key], '%Y-%m-%d').date()
 					if (date.day == birthday.day) and (date.month == birthday.month):
 						bot.send_message(group_chat_id, "{0}, Поздравляю с Днем Рождения!!!".format(key))
-						bot.send_photo(group_chat_id, birthday_picture)
-						bot.send_document(group_chat_id, birthday_gif)
+						bot.send_photo(group_chat_id, celebration_picture)
+						bot.send_document(group_chat_id, celebration_gif)
 						# time.sleep(60)
+			if current_time.hour == 0 and current_time.minute == 0 and current_time.day == 1 and current_time.month == 1:
+				bot.send_message(
+					group_chat_id, 
+					"Поздравляю всех работяг с Новым годом!!! Счастья, здоровья, успехов во всех начинаниях!"
+				)
+				bot.send_document(group_chat_id, celebration_gif)
 		except Exception:
 			print("Exception raised")
 			pass

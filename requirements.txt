@@ -1,0 +1,4 @@
+telebot
+datetime
+julian
+python-dotenv
